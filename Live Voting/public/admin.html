@@ -1,0 +1,58 @@
+z<h1>
+    Admin 
+    <h4> Current Page Number :
+        <span id="data">
+            welcome Stage
+        </span>
+    </h4>
+</h1>
+
+<button onclick="sendMessage(-1)">
+    Previous
+</button>
+
+
+<button onclick="sendMessage(1)">
+    Next
+</button>
+
+<script>
+    var ws = new WebSocket('ws://localhost:40510');
+    var i=0;
+    var pageNo = document.getElementById("data");
+
+    ws.onopen = function () {
+        console.log('Admin websocket is connected ...')
+        // ws.send(JSON.stringify({
+        //     client : "admin",
+        //     data : -1
+        // }))
+    }
+
+    ws.onmessage = function (ev) {
+        ev = JSON.parse(ev.data)
+        if(ev.cleint =="server"){
+                
+        }
+    }
+
+    function sendMessage(num){
+        
+        i = (num==1)? (i+1) : (i-1);
+        pageNo.innerText = i;
+        ws.send(JSON.stringify({
+            client : "admin",
+            data : i
+        }));
+    }
+    
+    function showResult(){
+            fetch("/data").then(res => res.json())
+            .then((res) => {
+                s.innerText = res.data;
+                console.log(res);
+            }).catch((err)=> console.log(err));
+
+    }
+
+</script>

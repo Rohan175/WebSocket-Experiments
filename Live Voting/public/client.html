@@ -1,0 +1,96 @@
+<h1>Data : <span id="data"></span></h1>
+
+    <div id="main">
+    <div id="imageDiv">
+        <img src="/images/1s.PNG" alt="data" id = "image">
+    </div>
+
+    <div class="rangeC">
+        <p>Data 1</p>
+        <input type="range" value=""
+        class="range" value="0" min="0" max="50" step="1">
+    </div>
+
+    <div class="rangeC">
+        <p>Data 1</p>
+        <input type="range" value=""
+        class="range" value="0" min="0" max="50" step="1">
+    </div>
+
+    <div  class="rangeC">
+        <p>Data 1</p>
+        <input type="range" value=""
+        class="range" value="0" min="0" max="50" step="1">
+    </div>
+
+    <button onclick="sendMessage()">Save</button>
+</div>
+
+<link rel="stylesheet" href="/css/client.css">
+
+<script>
+    let s = document.getElementById('data');
+    let image = document.getElementById('image');
+    let id;
+    let main = document.getElementById("main");
+    
+    var range = document.getElementsByClassName("range");
+  
+    // if(s.innerText== ""){
+    //     fetch("/data").then(res => res.json())
+    //         .then((res) => {
+    //             s.innerText = res.data;
+    //             console.log(res);
+    //         }).catch((err)=> console.log(err));
+
+    //     //console.log("data obtained");
+    // }
+
+    let ws = new WebSocket("ws://192.168.2.4:40510");
+
+    ws.addEventListener("open",function(e){
+
+        console.log('websocket is connected ...');
+   
+    });
+
+     ws.addEventListener("message",function(ev) {
+        
+        console.log(JSON.parse(ev.data));
+        ev = JSON.parse(ev.data)
+        s.innerText = ev.data;
+        image.src = "/images/" + ev.imageUrl;
+        
+        if(s.innerText =="Welcome Stage"){
+            main.style.display ="none";
+        }else{
+            main.style.display ="show";
+        }
+
+        if(document.cookie == ""){
+            var d = new Date();
+            d.setTime(d.getTime() + (2*24*60*60*1000));
+            var expires = "expires="+ d.toUTCString();
+            document.cookie = "id" + "=" + ev.id + ";" + expires + ";path=/";
+        }
+        
+
+    });
+
+    function sendMessage(){
+        //get Data from inputs
+        let name = "id=";
+        let id  = document.cookie.substring(name.length, document.cookie.length);
+        console.log(id);
+        ws.send(JSON.stringify({
+            "client":"client",
+            "id":id,
+            "imageid" : s.innerText,
+            "data" : range[0].value,
+            "data1" : range[1].value,
+            "data2":range[2].value
+        }));
+    }
+    
+
+</script>

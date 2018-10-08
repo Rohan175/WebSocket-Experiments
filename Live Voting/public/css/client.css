@@ -1,0 +1,19 @@
+img{
+    width : 95vw;
+}
+.rangeC{
+	align-content:center;
+}
+  .range {
+	position:relative;
+	display:block;
+	width: 75vw;
+	margin-top:2.5em;
+}
+
+.range:after {
+	content: attr(data-value) "";
+	position:absolute;
+	top:-1.5em; left:0; right:0;
+	text-align:center;
+}
